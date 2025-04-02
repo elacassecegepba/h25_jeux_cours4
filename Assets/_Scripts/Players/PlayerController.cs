@@ -19,10 +19,11 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private GameObject _bulletContainer;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _bulletSpawnPoint;
-    [SerializeField] private CursorHover _cursorHover;
+    private CursorHover _cursorHover;
 
     void Start() {
         _rb = GetComponent<Rigidbody>();
+        _cursorHover = GetComponent<CursorHover>();
     }
 
     void Update() {
@@ -54,11 +55,37 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void ShootBullet() {
+        GameObject bullet = Instantiate(
+            _bulletPrefab,
+            _bulletSpawnPoint.position,
+            _bulletSpawnPoint.rotation,
+            _bulletContainer.transform
+        );
     }
 
     private void Move() {
+        Vector3 distance =
+            _moveSpeedPerSecond *
+            Time.fixedDeltaTime *
+            _movement;
+
+        _rb.MovePosition(_rb.position + distance);
     }
 
     private void OrientatePlayer() {
+        if(!_cursorHover.IsHovering) { return; }
+
+        Vector3 directionVector = new Vector3(
+            _cursorHover.Position.x,
+            _rb.position.y,
+            _cursorHover.Position.z
+        ) - _rb.position;
+
+        Quaternion rotation = Quaternion.LookRotation(
+            directionVector,
+            Vector3.up
+        );
+
+        _rb.MoveRotation(rotation);
     }
 }

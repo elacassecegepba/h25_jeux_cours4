@@ -7,6 +7,7 @@ public class SpawnManager : Singleton<SpawnManager> {
     private float _spawnRate = 1;
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private EnemySO[] _enemySOs;
     private float _timeLeftBeforeSpawn = 0;
     private SpawnPoint[] _spawnPoints;
     private GameObject _player;
@@ -41,6 +42,7 @@ public class SpawnManager : Singleton<SpawnManager> {
 
     private void SpawnEnemy() {
         SpawnPoint spawnPoint = GetRandomSpawnPoint();
+        EnemySO enemySO = GetRandomEnemySO();
 
         Enemy enemy = Instantiate(
            _enemyPrefab,
@@ -48,9 +50,16 @@ public class SpawnManager : Singleton<SpawnManager> {
            Quaternion.LookRotation(_player.transform.position), // Regarde le joueur
            _enemyContainer.transform
         );
+
+        enemy.Init(enemySO);
+    }
+    private EnemySO GetRandomEnemySO()
+    {
+        return _enemySOs[Random.Range(0, _enemySOs.Length)];
     }
 
     private SpawnPoint GetRandomSpawnPoint() {
         return _spawnPoints[Random.Range(0, _spawnPoints.Length)];
     }
+
 }

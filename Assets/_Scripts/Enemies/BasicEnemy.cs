@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BasicEnemy : Enemy {
     private GameObject _player;
-    [SerializeField] private float _speed = 7f;
 
     void FixedUpdate() {
         FollowPlayer();
@@ -13,7 +12,7 @@ public class BasicEnemy : Enemy {
             Vector3.MoveTowards(
                 transform.position,
                 _player.transform.position,
-                _speed * Time.fixedDeltaTime
+                _enemySO._speed * Time.fixedDeltaTime
             )
         );
 
@@ -28,7 +27,7 @@ public class BasicEnemy : Enemy {
         // chercher par type, car cela peut être plus coûteux en termes
         // de performance.
         _player = GameObject.FindGameObjectWithTag("Player");
-        // _player = FindAnyObjectByType<PlayerController>().gameObject;
+        //_player = FindAnyObjectByType<PlayerController>().gameObject;
 
         // Si on avait plusieurs joueurs, on pourrait faire comme ça :
         // _players = GameObject.FindGameObjectsWithTag("Player");
